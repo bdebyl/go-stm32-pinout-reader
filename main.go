@@ -44,7 +44,7 @@ func main() {
 	)
 
 	flag.StringVar(&csvFileName, "f", "", "Specify a .csv file to read.")
-	flag.StringVar(&outFileName, "o", "output.json", "Specify an output .json file [default: output.json]")
+	flag.StringVar(&outFileName, "o", "output.json", "Specify an output .json file")
 	flag.Parse()
 
 	if csvFileName == "" {

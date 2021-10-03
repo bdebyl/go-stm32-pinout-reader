@@ -11,5 +11,5 @@ Usage of go-stm32-pinout-reader:
   -f string
     	Specify a .csv file to read.
   -o string
-    	Specify an output .json file [default: output.json] (default "output.json")
+    	Specify an output .json file (default "output.json")
 ```
