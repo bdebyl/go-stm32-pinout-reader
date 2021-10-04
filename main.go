@@ -14,8 +14,13 @@ type PinoutRecord struct {
 	Signal string `json:"signal"`
 }
 
-func createPinoutRecord(data [][]string) []PinoutRecord {
-	var pinoutRecords []PinoutRecord
+type PortRecord struct {
+	Port    string         `json:"port"`
+	Records []PinoutRecord `json:"signals"`
+}
+
+func createPortMap(data [][]string) map[string][]PinoutRecord {
+	var portMap = make(map[string][]PinoutRecord)
 
 	for i, line := range data {
 		if i > 0 {
@@ -30,11 +35,19 @@ func createPinoutRecord(data [][]string) []PinoutRecord {
 				}
 			}
 			if record.Pin != "" && record.Signal != "" {
-				pinoutRecords = append(pinoutRecords, record)
+				port := "GPIO" + string(record.Pin[1])
+
+				if _, ok := portMap[port]; !ok {
+					newRecList := []PinoutRecord{record}
+
+					portMap[port] = newRecList
+				} else {
+					portMap[port] = append(portMap[port], record)
+				}
 			}
 		}
 	}
-	return pinoutRecords
+	return portMap
 }
 
 func main() {
@@ -63,9 +76,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	pinoutRecords := createPinoutRecord(data)
+	portMap := createPortMap(data)
 
-	jsonData, err := json.MarshalIndent(pinoutRecords, "", "  ")
+	jsonData, err := json.MarshalIndent(portMap, "", "  ")
 	if err != nil {
 		log.Fatal(err)
 	}
